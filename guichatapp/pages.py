@@ -2,8 +2,6 @@ from tkinter import *
 from tkinter.scrolledtext import ScrolledText
 
 
-    
-
 class MainPage(Frame):
 
     def server(mainP):     
