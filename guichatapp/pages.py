@@ -39,6 +39,9 @@ class MainPage(Frame):
         self.clientB.pack(side=BOTTOM,pady=30,ipadx=10,ipady=10)
         
 class ServerPage(Frame):
+    def start(page):
+        print(page)
+
     def __init__(self,root):
         Frame.__init__(self,root)
         self.config(bg='dark grey')
@@ -59,14 +62,64 @@ class ServerPage(Frame):
         self.f2=Frame(self)
         self.f2.pack(pady=40)
 
-        self.ngCb=Checkbutton(self.f2,text='Ngrok',font='arial 10')
-        self.ngCb.pack(side=LEFT,padx=5)
+        self.ngRb=Radiobutton(self.f2,text='Ngrok',font='arial 14')
+        self.ngRb.pack(side=TOP,padx=5)
         
-        self.authL=Label(self.f2,text='Authtoken: ',font='arial 10')
-        self.authL.pack(side=LEFT,padx=5)
+        self.authL=Label(self.f2,text='Authtoken: ',font='arial 14')
+        self.authL.pack(side=LEFT,padx=5,pady=20)
         
-        self.authB=Entry(self.f2,font='arial 10',width=50,highlightbackground='black')
-        self.authB.pack(side=LEFT,padx=5)
+        self.authB=Entry(self.f2,font='arial 14',width=40,highlightbackground='black')
+        self.authB.pack(side=LEFT,padx=5,pady=20)
+
+        self.f3=Frame(self)
+        self.f3.pack(pady=40)
+
+        self.startB=Button(self.f3,text='Start',font='helvetica 18',width=20,bg='light blue',fg='green',highlightbackground='red',command=self.start)
+        self.startB.pack(pady=30,ipadx=10,ipady=10)
+
+class ClientPage(Frame):
+    def start(page):
+        print(page)
+
+    def __init__(self,root):
+        Frame.__init__(self,root)
+        self.config(bg='dark grey')
+        self.pack(fill=BOTH,expand=1)
+        
+        self.appL=Label(self, bg = 'yellow', fg='green', font='helvetica 20',text='GUI CHAT APP',width=32, relief=RAISED)
+        self.appL.pack(fill=X)
+
+        self.f1=Frame(self)
+        self.f1.pack(pady=40)
+        
+        self.authL=Label(self.f1,text='Connection link: ',font='arial 14')
+        self.authL.pack(side=LEFT,padx=5,pady=20)
+        
+        self.authB=Entry(self.f1,font='arial 14',width=40,highlightbackground='black')
+        self.authB.pack(side=LEFT,padx=5,pady=20)
+
+        self.f2=Frame(self)
+        self.f2.pack(pady=40)
+
+        self.hostL=Label(self.f2,text='Host: ',font='veranda 12')
+        self.hostL.pack(side=LEFT,padx=10,ipadx=10)
+
+        self.hostB=Entry(self.f2,font='veranda 12',width=20,highlightbackground='black')
+        self.hostB.pack(side=LEFT,padx=10)
+
+        self.portL=Label(self.f2,text='Port: ',font='veranda 12')
+        self.portL.pack(side=LEFT,padx=10,ipadx=10)
+
+        self.portB=Entry(self.f2,font='veranda 12',width=10,highlightbackground='black')
+        self.portB.pack(side=LEFT,padx=10)
+         
+        self.f3=Frame(self)
+        self.f3.pack(pady=40)
+
+        self.startB=Button(self.f3,text='Start',font='helvetica 18',width=20,bg='light blue',fg='green',highlightbackground='red',command=self.start)
+        self.startB.pack(pady=30,ipadx=10,ipady=10)
+
+
 
 class ChatPage(Frame):
     def __init__(self,root):
@@ -95,7 +148,7 @@ class ChatPage(Frame):
         self.msgB=Entry(self,font='helvetica 14')
         self.msgB.pack(expand=True,fill=BOTH,side=LEFT)
 
-        self.sendB=Button(self,text='>',font='helvetica 16')
+        self.sendB=Button(self,text='>',font='helvetica 16',bg='light green')
         self.sendB.pack(fill=BOTH,side=RIGHT)
 
         self.chat.config(state=NORMAL)
