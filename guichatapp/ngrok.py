@@ -10,7 +10,7 @@ def Ngrok(port,authtoken):
             os.system('./ngrok authtoken '+authtoken)
 
         os.system('./ngrok tcp '+str(port)+' > /dev/null &')
-        sleep(5)    
+        sleep(10)    
         url='http://127.0.0.1:4040/api/tunnels'
         res=requests.get(url)
         false=0
