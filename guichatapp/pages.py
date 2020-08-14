@@ -4,18 +4,27 @@ from tkinter.scrolledtext import ScrolledText
 
 class MainPage(Frame):
 
-    def server(mainP):     
-        print(mainP.appL)
+    def server(self):     
+        sName.set(self.nameB.get())
+        print('You: '+sName.get())
+        
+        serverPage=ServerPage(self.master)
+        self.destroy()
+        serverPage.pack()
 
-    def client(mainP):
-        print(mainP)
+    def client(self):
+        sName.set(self.nameB.get())
+        print('You: '+sName.get())
+        
+        clientPage=ClientPage(self.master)
+        self.destroy()
+        clientPage.pack()
 
 
 
-    def __init__(self,root):
-        Frame.__init__(self,root)
+    def __init__(self,app):
+        Frame.__init__(self,app)
         self.config(bg='dark grey')
-        self.pack(fill=BOTH,expand=1)
         
         self.appL=Label(self, bg = 'yellow', fg='green', font='helvetica 20',text='GUI CHAT APP',width=32, relief=RAISED)
         self.appL.pack(fill=X)
@@ -42,10 +51,9 @@ class ServerPage(Frame):
     def start(page):
         print(page)
 
-    def __init__(self,root):
-        Frame.__init__(self,root)
+    def __init__(self,app):
+        Frame.__init__(self,app)
         self.config(bg='dark grey')
-        self.pack(fill=BOTH,expand=1)
         
         self.appL=Label(self, bg = 'yellow', fg='green', font='helvetica 20',text='GUI CHAT APP',width=32, relief=RAISED)
         self.appL.pack(fill=X)
@@ -61,10 +69,13 @@ class ServerPage(Frame):
         
         self.f2=Frame(self)
         self.f2.pack(pady=40)
-
-        self.ngRb=Radiobutton(self.f2,text='Ngrok',font='arial 14')
-        self.ngRb.pack(side=TOP,padx=5)
         
+        self.ngV=IntVar()
+        self.ngV.set(1)
+        self.ngCb=Checkbutton(self.f2,text='Ngrok',font='arial 14',variable=self.ngV,offvalue=0,onvalue=1)
+        self.ngCb.pack(side=TOP,padx=5)
+        
+
         self.authL=Label(self.f2,text='Authtoken: ',font='arial 14')
         self.authL.pack(side=LEFT,padx=5,pady=20)
         
@@ -81,10 +92,9 @@ class ClientPage(Frame):
     def start(page):
         print(page)
 
-    def __init__(self,root):
-        Frame.__init__(self,root)
+    def __init__(self,app):
+        Frame.__init__(self,app)
         self.config(bg='dark grey')
-        self.pack(fill=BOTH,expand=1)
         
         self.appL=Label(self, bg = 'yellow', fg='green', font='helvetica 20',text='GUI CHAT APP',width=32, relief=RAISED)
         self.appL.pack(fill=X)
@@ -122,22 +132,19 @@ class ClientPage(Frame):
 
 
 class ChatPage(Frame):
-    def __init__(self,root):
-        Frame.__init__(self,root)
-        self.pack()
+    def __init__(self,app):
+        Frame.__init__(self,app)
 
         self.appL=Label(self, bg = 'yellow', fg='green', font='helvetica 20',text='GUI CHAT APP', relief=RAISED)
         self.appL.pack(fill=X)
-
-        sname = StringVar()
-        self.splate=Label(self, bg = 'green', fg= 'blue', font='helvetica 18',textvariable=sname, relief=SOLID)
+        
+        self.splate=Label(self, bg = 'green', fg= 'blue', font='helvetica 18',textvariable=sName, relief=SOLID)
         self.splate.pack(fill=X)
-        sname.set('You: '+'Deshdeepak')
+        sName.set('You: '+'Deshdeepak')
 
-        oname = StringVar()
-        self.oplate=Label(self, bg = 'green', fg= 'blue', font='helvetica 18',textvariable=oname, relief=SOLID)
+        self.oplate=Label(self, bg = 'green', fg= 'blue', font='helvetica 18',textvariable=oName, relief=SOLID)
         self.oplate.pack(fill=X)
-        oname.set('Friend: '+'Shubham')
+        oName.set('Friend: '+'Shubham')
 
         self.chat=ScrolledText(self,state=DISABLED,height=27,font='arial 12')
         self.chat.pack(fill=X)
@@ -158,3 +165,21 @@ class ChatPage(Frame):
         self.chat.config(state=DISABLED)
         self.chat.see(END)
         
+class App(Tk):
+	
+	def __init__(self):
+            
+            Tk.__init__(self)
+            self.title('Gui Chat App')
+            self.geometry('525x650')
+            self.resizable(0,0)
+            self.config(bg='dark grey')
+            
+            mainPage=MainPage(self)
+            mainPage.pack()
+
+            global sName
+            sName=StringVar()
+            
+            global oName
+            oName=StringVar()

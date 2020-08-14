@@ -1,13 +1,8 @@
-from tkinter import *
-from .pages import *
-root=Tk()
-root.title('Gui Chat App')
-root.geometry('525x650')
-root.resizable(0,0)
+from .pages import App
 
-#chatPage=ChatPage(root)
-#mainPage=MainPage(root)
-#serverPage=ServerPage(root)
-clientPage=ClientPage(root)
-root.mainloop()
+def main():
+	app=App()
+	app.mainloop()
 
+if __name__=='__main__':
+    main()
