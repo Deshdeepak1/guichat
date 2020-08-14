@@ -1,5 +1,12 @@
 from tkinter import *
+from tkinter import messagebox
 from tkinter.scrolledtext import ScrolledText
+from .server import server
+from .ngrok import Ngrok
+import socket
+
+port =9999
+host=''
 
 
 class MainPage(Frame):
@@ -19,8 +26,6 @@ class MainPage(Frame):
         clientPage=ClientPage(self.master)
         self.destroy()
         clientPage.pack()
-
-
 
     def __init__(self,app):
         Frame.__init__(self,app)
@@ -48,8 +53,38 @@ class MainPage(Frame):
         self.clientB.pack(side=BOTTOM,pady=30,ipadx=10,ipady=10)
         
 class ServerPage(Frame):
-    def start(page):
-        print(page)
+
+    def start(self):
+        global port
+        p=self.portB.get()
+        if p!='':
+            port=int(p)
+        
+        global s
+        s=socket.socket()
+
+        try:
+            s.bind(('',port))
+        except socket.error as e:
+            messagebox.showerror('Error',e)
+            return
+
+        s.listen(1)
+
+        if self.ngV.get():
+            authtoken=self.authB.get()
+            server(port,sName.get())
+            link=Ngrok(port,authtoken)
+            self.conB.insert(END,link)
+        else:
+            server(port,sName.get())
+        
+
+    def ng(self):
+        if self.ngV.get():
+            self.authB.configure(state=NORMAL)  
+        else:
+            self.authB.configure(state=DISABLED)
 
     def __init__(self,app):
         Frame.__init__(self,app)
@@ -72,10 +107,9 @@ class ServerPage(Frame):
         
         self.ngV=IntVar()
         self.ngV.set(1)
-        self.ngCb=Checkbutton(self.f2,text='Ngrok',font='arial 14',variable=self.ngV,offvalue=0,onvalue=1)
+        self.ngCb=Checkbutton(self.f2,text='Ngrok',font='arial 14',command=self.ng,variable=self.ngV,offvalue=0,onvalue=1)
         self.ngCb.pack(side=TOP,padx=5)
         
-
         self.authL=Label(self.f2,text='Authtoken: ',font='arial 14')
         self.authL.pack(side=LEFT,padx=5,pady=20)
         
@@ -87,6 +121,15 @@ class ServerPage(Frame):
 
         self.startB=Button(self.f3,text='Start',font='helvetica 18',width=20,bg='light blue',fg='green',highlightbackground='red',command=self.start)
         self.startB.pack(pady=30,ipadx=10,ipady=10)
+
+        self.f4=Frame(self)
+        self.f4.pack(pady=10)
+        
+        self.conL=Label(self.f4,text='Connection link: ',font='arial 14')
+        self.conL.pack(side=LEFT,padx=5,pady=20)
+        
+        self.conB=Entry(self.f4,font='arial 14',width=40,highlightbackground='black')
+        self.conB.pack(side=LEFT,padx=5,pady=20)
 
 class ClientPage(Frame):
     def start(page):
@@ -102,11 +145,11 @@ class ClientPage(Frame):
         self.f1=Frame(self)
         self.f1.pack(pady=40)
         
-        self.authL=Label(self.f1,text='Connection link: ',font='arial 14')
-        self.authL.pack(side=LEFT,padx=5,pady=20)
+        self.conL=Label(self.f1,text='Connection link: ',font='arial 14')
+        self.conL.pack(side=LEFT,padx=5,pady=20)
         
-        self.authB=Entry(self.f1,font='arial 14',width=40,highlightbackground='black')
-        self.authB.pack(side=LEFT,padx=5,pady=20)
+        self.conB=Entry(self.f1,font='arial 14',width=40,highlightbackground='black')
+        self.conB.pack(side=LEFT,padx=5,pady=20)
 
         self.f2=Frame(self)
         self.f2.pack(pady=40)
@@ -174,9 +217,9 @@ class App(Tk):
             self.geometry('525x650')
             self.resizable(0,0)
             self.config(bg='dark grey')
-            
+
             mainPage=MainPage(self)
-            mainPage.pack()
+            mainPage.pack(fill=BOTH,expand=1)
 
             global sName
             sName=StringVar()
