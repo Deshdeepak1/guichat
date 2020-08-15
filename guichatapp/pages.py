@@ -6,7 +6,7 @@ from .ngrok import Ngrok
 import socket
 
 port =9999
-host=''
+host='localhost'
 sname=''
 oname=''
 
@@ -71,7 +71,7 @@ class MainPage(Frame):
 class ServerPage(Frame):
 
     def start(self):
-        global host,port,sname,oname,c
+        global port,sname,oname,c
         p=self.portB.get()
         if p!='':
             port=int(p)
@@ -80,7 +80,7 @@ class ServerPage(Frame):
         s=socket.socket()
 
         try:
-            s.bind((host,port))
+            s.bind(('',port))
         except socket.error as e:
             messagebox.showerror('Error',e)
             return
@@ -161,8 +161,10 @@ class ClientPage(Frame):
         link=self.conB.get()
         
         if link=='':
-            host=self.hostB.get()
+            h=self.hostB.get()
             p=self.portB.get()
+            if h!='':
+                host=h
             if p !='':
             	port=int(p)
         else:
