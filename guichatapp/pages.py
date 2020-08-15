@@ -7,21 +7,37 @@ import socket
 
 port =9999
 host=''
+sname=''
+oname=''
 
+def br(msg):
+    txts=msg.split()
+    l=['']
+    i=0
+    for txt in txts:
+        if len(l[i]+txt+' ')<=30:
+            l[i]+=txt+' '
+        else:
+            i+=1
+            l.append('')
+            l[i]=txt+' '
+    return '\n'.join(l)+'\n'
 
 class MainPage(Frame):
 
     def server(self):     
-        sName.set(self.nameB.get())
-        print('You: '+sName.get())
+        global sname
+        sname=self.nameB.get()
+        sName.set('You : '+sname)
         
         serverPage=ServerPage(self.master)
         self.destroy()
         serverPage.pack()
 
     def client(self):
-        sName.set(self.nameB.get())
-        print('You: '+sName.get())
+        global sname
+        sname=self.nameB.get()
+        sName.set('You : '+sname)
         
         clientPage=ClientPage(self.master)
         self.destroy()
@@ -55,7 +71,7 @@ class MainPage(Frame):
 class ServerPage(Frame):
 
     def start(self):
-        global port
+        global host,port,sname,oname,c
         p=self.portB.get()
         if p!='':
             port=int(p)
@@ -64,7 +80,7 @@ class ServerPage(Frame):
         s=socket.socket()
 
         try:
-            s.bind(('',port))
+            s.bind((host,port))
         except socket.error as e:
             messagebox.showerror('Error',e)
             return
@@ -73,12 +89,18 @@ class ServerPage(Frame):
 
         if self.ngV.get():
             authtoken=self.authB.get()
-            server(port,sName.get())
             link=Ngrok(port,authtoken)
             self.conB.insert(END,link)
+            self.update()
         else:
-            server(port,sName.get())
-        
+            pass
+        c,addr=s.accept()
+        oname=c.recv(1024).decode()
+        oName.set('Friend : '+oname)
+        c.send(bytes(sname,'utf-8'))
+        chatPage=ChatPage(self.master)
+        self.destroy()
+        chatPage.pack()
 
     def ng(self):
         if self.ngV.get():
@@ -132,9 +154,32 @@ class ServerPage(Frame):
         self.conB.pack(side=LEFT,padx=5,pady=20)
 
 class ClientPage(Frame):
-    def start(page):
-        print(page)
+	
+    def start(self):
+        global host,port,sname,oname,c
 
+        link=self.conB.get()
+        
+        if link=='':
+            host=self.hostB.get()
+            p=self.portB.get()
+            if p !='':
+            	port=int(p)
+        else:
+            hp=link.split('//')[1]
+            host=hp.split(':')[0]
+            port=int(hp.split(':')[1])
+        print(host,port)
+        c=socket.socket()
+        c.connect((host,port))
+        oname=c.recv(1024).decode()
+        oName.set('Friend : '+oname)
+        c.send(bytes(sname,'utf-8'))
+        chatPage=ChatPage(self.master)
+        self.destroy()
+        chatPage.pack()
+
+        
     def __init__(self,app):
         Frame.__init__(self,app)
         self.config(bg='dark grey')
@@ -175,6 +220,21 @@ class ClientPage(Frame):
 
 
 class ChatPage(Frame):
+    def sendMsg(*args):
+        self=args[0]
+        global c
+        msg=self.msgB.get()
+        self.msgB.delete(0,END)
+        if msg !='':
+            msg=br(msg)
+            c.send(bytes(msg,'utf-8'))
+            self.chat.config(state=NORMAL)
+            self.chat.insert(END,msg,'right')
+            self.chat.insert(END,'\n')
+            self.chat.config(state=DISABLED)
+            self.chat.see(END)
+
+
     def __init__(self,app):
         Frame.__init__(self,app)
 
@@ -183,30 +243,23 @@ class ChatPage(Frame):
         
         self.splate=Label(self, bg = 'green', fg= 'blue', font='helvetica 18',textvariable=sName, relief=SOLID)
         self.splate.pack(fill=X)
-        sName.set('You: '+'Deshdeepak')
 
         self.oplate=Label(self, bg = 'green', fg= 'blue', font='helvetica 18',textvariable=oName, relief=SOLID)
         self.oplate.pack(fill=X)
-        oName.set('Friend: '+'Shubham')
 
         self.chat=ScrolledText(self,state=DISABLED,height=27,font='arial 12')
         self.chat.pack(fill=X)
 
-        self.chat.tag_config('left',justify='left',foreground='blue')
-        self.chat.tag_config('right',justify='right',foreground='green')
+        self.chat.tag_config('left',justify='left',foreground='blue',background='pink')
+        self.chat.tag_config('right',justify='right',foreground='green',background='yellow')
 
         self.msgB=Entry(self,font='helvetica 14')
+        self.msgB.bind('<Return>',self.sendMsg)
         self.msgB.pack(expand=True,fill=BOTH,side=LEFT)
 
-        self.sendB=Button(self,text='>',font='helvetica 16',bg='light green')
+        self.sendB=Button(self,text='>',font='helvetica 16',bg='light green',command=self.sendMsg)
         self.sendB.pack(fill=BOTH,side=RIGHT)
 
-        self.chat.config(state=NORMAL)
-        for i in range(50): 
-            self.chat.insert(END,'RMessage'*3+'\n','left')
-            self.chat.insert(END,'SMessage'*4+'\n','right')
-        self.chat.config(state=DISABLED)
-        self.chat.see(END)
         
 class App(Tk):
 	
@@ -221,8 +274,6 @@ class App(Tk):
             mainPage=MainPage(self)
             mainPage.pack(fill=BOTH,expand=1)
 
-            global sName
-            sName=StringVar()
-            
-            global oName
+            global sName,oName
+            sName=StringVar() 
             oName=StringVar()
