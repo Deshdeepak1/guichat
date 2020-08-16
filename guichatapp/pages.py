@@ -1,4 +1,11 @@
-from tkinter import *
+import os
+try:
+    from tkinter import *
+    import klembord
+except:
+    os.system('sudo apt-get install python3-tk python-tk && apt-get install python-tkinter python3-tkinter && pip3 install -U klembord')
+    from tkinter import *
+    import klembord
 from tkinter import messagebox
 from tkinter.scrolledtext import ScrolledText
 from .ngrok import Ngrok
@@ -94,7 +101,8 @@ class ServerPage(Frame):
             link=Ngrok(port,authtoken)
             self.conB.insert(END,link)
             self.update()
-            self.clipboard_append(link)
+            klembord.init()
+            klembord.set_text(link)
         else:
             pass
         c,addr=s.accept()
