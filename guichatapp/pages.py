@@ -94,6 +94,7 @@ class ServerPage(Frame):
             link=Ngrok(port,authtoken)
             self.conB.insert(END,link)
             self.update()
+            self.clipboard_append(link)
         else:
             pass
         c,addr=s.accept()
