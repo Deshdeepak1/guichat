@@ -22,7 +22,7 @@ def br(msg):
     l=['']
     i=0
     for txt in txts:
-        if len(l[i]+txt+' ')<=30:
+        if len(l[i]+txt+' ')<=35:
             l[i]+=txt+' '
         else:
             i+=1
@@ -105,9 +105,9 @@ class ServerPage(Frame):
         def serverStart(serverP):
             global c
             c,addr=s.accept()
+            c.send(bytes(sname,'utf-8'))
             oname=c.recv(1024).decode()
             oName.set('Friend : '+oname)
-            c.send(bytes(sname,'utf-8'))
             chatPage=ChatPage(serverP.master)
             serverP.destroy()
             chatPage.pack()
