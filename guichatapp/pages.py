@@ -1,16 +1,16 @@
 import os
 try:
     from tkinter import *
-    import klembord
 except:
-    os.system('sudo apt-get install python3-tk python-tk && apt-get install python-tkinter python3-tkinter && pip3 install -U klembord')
+    os.system('sudo apt-get install python3-tk')
+    os.system('apt-get install python-tkinter')
     from tkinter import *
-    import klembord
 from tkinter import messagebox
 from tkinter.scrolledtext import ScrolledText
 from .ngrok import Ngrok
 import socket
 from threading import Thread
+from time import sleep
 
 port =9999
 host='localhost'
@@ -80,12 +80,11 @@ class MainPage(Frame):
 class ServerPage(Frame):
 
     def start(self):
-        global port,sname,oname,c
+        global port,sname,oname
         p=self.portB.get()
         if p!='':
             port=int(p)
         
-        global s
         s=socket.socket()
 
         try:
@@ -100,18 +99,21 @@ class ServerPage(Frame):
             authtoken=self.authB.get()
             link=Ngrok(port,authtoken)
             self.conB.insert(END,link)
-            self.update()
-            klembord.init()
-            klembord.set_text(link)
+            self.conB.update()
         else:
             pass
-        c,addr=s.accept()
-        oname=c.recv(1024).decode()
-        oName.set('Friend : '+oname)
-        c.send(bytes(sname,'utf-8'))
-        chatPage=ChatPage(self.master)
-        self.destroy()
-        chatPage.pack()
+        def serverStart(serverP):
+            global c
+            c,addr=s.accept()
+            oname=c.recv(1024).decode()
+            oName.set('Friend : '+oname)
+            c.send(bytes(sname,'utf-8'))
+            chatPage=ChatPage(serverP.master)
+            serverP.destroy()
+            chatPage.pack()
+        sT=Thread(target=serverStart,args=(self,))
+        sT.start()
+
 
     def ng(self):
         if self.ngV.get():
@@ -182,16 +184,20 @@ class ClientPage(Frame):
             hp=link.split('//')[1]
             host=hp.split(':')[0]
             port=int(hp.split(':')[1])
-        print(host,port)
+        
         c=socket.socket()
-        c.connect((host,port))
-        oname=c.recv(1024).decode()
-        oName.set('Friend : '+oname)
-        c.send(bytes(sname,'utf-8'))
-        chatPage=ChatPage(self.master)
-        self.destroy()
-        chatPage.pack()
+        
+        def clientStart(clientP):
+            c.connect((host,port))
+            oname=c.recv(1024).decode()
+            oName.set('Friend : '+oname)
+            c.send(bytes(sname,'utf-8'))
+            chatPage=ChatPage(clientP.master)
+            clientP.destroy()
+            chatPage.pack()
 
+        cT=Thread(target=clientStart,args=(self,))
+        cT.start()
         
     def __init__(self,app):
         Frame.__init__(self,app)
