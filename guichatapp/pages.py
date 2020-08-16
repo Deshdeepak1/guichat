@@ -1,9 +1,9 @@
 from tkinter import *
 from tkinter import messagebox
 from tkinter.scrolledtext import ScrolledText
-from .server import server
 from .ngrok import Ngrok
 import socket
+from threading import Thread
 
 port =9999
 host='localhost'
@@ -22,6 +22,8 @@ def br(msg):
             l.append('')
             l[i]=txt+' '
     return '\n'.join(l)+'\n'
+
+
 
 class MainPage(Frame):
 
@@ -222,6 +224,22 @@ class ClientPage(Frame):
 
 
 class ChatPage(Frame):
+    
+    class Receiver(Thread):
+        def __init__(self,chatPage):
+            Thread.__init__(self)
+            self.chatPage = chatPage
+        def run(self):
+            global c
+            while True:
+                msg=c.recv(1024).decode()
+                self.chatPage.chat.config(state=NORMAL)
+                self.chatPage.chat.insert(END,msg,'left')
+                self.chatPage.chat.insert(END,'\n')
+                self.chatPage.chat.config(state=DISABLED)
+                self.chatPage.chat.see(END) 
+
+
     def sendMsg(*args):
         self=args[0]
         global c
@@ -261,7 +279,9 @@ class ChatPage(Frame):
 
         self.sendB=Button(self,text='>',font='helvetica 16',bg='light green',command=self.sendMsg)
         self.sendB.pack(fill=BOTH,side=RIGHT)
-
+        
+        self.receiver=self.Receiver(self)
+        self.receiver.start()
         
 class App(Tk):
 	
