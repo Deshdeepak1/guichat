@@ -7,9 +7,11 @@ except:
 
 from time import sleep
 
+HOME=os.environ.get('HOME')
+
 def Ngrok(port,authtoken):
 
-    if os.environ['HOME']=='/data/data/com.termux/files/home':
+    if HOME=='/data/data/com.termux/files/home':
         if authtoken=='':
             pass
         else:
