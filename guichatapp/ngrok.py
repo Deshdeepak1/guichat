@@ -1,4 +1,10 @@
-import os,requests
+import os
+try:
+    import requests
+except:
+    os.system('pip3 install -U requests')
+    import requests
+
 from time import sleep
 
 def Ngrok(port,authtoken):
