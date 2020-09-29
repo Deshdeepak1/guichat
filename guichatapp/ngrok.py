@@ -1,39 +1,10 @@
-import os
-try:
-    import requests
-except:
-    os.system('pip3 install -U requests')
-    import requests
+from pyngrok import ngrok
 
-from time import sleep
-
-HOME=os.environ.get('HOME')
 
 def Ngrok(port,authtoken):
+    if authtoken:
+        ngrok.set_auth_token(authtoken)
 
-    if HOME=='/data/data/com.termux/files/home':
-        if authtoken=='':
-            pass
-        else:
-            os.system('./ngrok authtoken '+authtoken)
-
-        os.system('./ngrok tcp '+str(port)+' > /dev/null &')
-        sleep(10)    
-        url='http://127.0.0.1:4040/api/tunnels'
-        res=requests.get(url)
-        false=0
-        link=eval(res.__dict__['_content'].decode())["tunnels"][0]['public_url']
-
-    else:
-        os.system('pip3 install pyngrok')
-
-        from pyngrok import ngrok
-
-        if authtoken=='':
-            pass
-        else:
-            ngrok.set_auth_token(authtoken)
-            
-        link=ngrok.connect(port,'tcp')
+    link=ngrok.connect(port,'tcp')
         
     return link

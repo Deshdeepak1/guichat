@@ -1,10 +1,4 @@
-import os
-try:
-    from tkinter import *
-except:
-    os.system('sudo apt-get install python3-tk')
-    os.system('apt-get install python-tkinter')
-    from tkinter import *
+from tkinter import *
 from tkinter import messagebox
 from tkinter.scrolledtext import ScrolledText
 from .ngrok import Ngrok
@@ -82,7 +76,7 @@ class ServerPage(Frame):
     def start(self):
         global port,sname,oname
         p=self.portB.get()
-        if p!='':
+        if p:
             port=int(p)
         
         s=socket.socket()
@@ -173,12 +167,12 @@ class ClientPage(Frame):
 
         link=self.conB.get()
         
-        if link=='':
+        if not link:
             h=self.hostB.get()
             p=self.portB.get()
-            if h!='':
+            if h:
                 host=h
-            if p !='':
+            if p:
             	port=int(p)
         else:
             hp=link.split('//')[1]
@@ -260,7 +254,7 @@ class ChatPage(Frame):
         global c
         msg=self.msgB.get()
         self.msgB.delete(0,END)
-        if msg !='':
+        if msg:
             msg=br(msg)
             c.send(bytes(msg,'utf-8'))
             self.chat.config(state=NORMAL)
