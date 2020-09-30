@@ -3,11 +3,10 @@ A gui chatapp build in python.
 
 # Instructions for termux.
  1. pkg install proot git python python-tkinter && pip3 install -U pyngrok
- 2. termux-chroot
- 3. git clone https://github.com/Deshdeepak1/guichat.git
- 4. cd guichat
- 5. chmod +x ./guichatapp.sh
- 6. ./guichatapp.sh
+ 2. git clone https://github.com/Deshdeepak1/guichat.git
+ 3. cd guichat
+ 4. chmod +x ./guichatapp.sh
+ 5. termux-chroot ./guichatapp.sh
 
 # Instructions for linux.
  1. git clone https://github.com/Deshdeepak1/guichat.git
