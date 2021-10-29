@@ -28,23 +28,24 @@ def br(msg):
 
 class MainPage(Frame):
 
-    def server(self):     
+    def gotoPage(self, pageConst):
         global sname
         sname = self.nameB.get()
+
+        if sname.strip() == '':
+            messagebox.showerror('Error', 'Please provide a name.')
+            return
+
         sName.set('You : '+sname)
-        
-        serverPage = ServerPage(self.master)
+        page = pageConst(self.master)
         self.destroy()
-        serverPage.pack()
+        page.pack()
+
+    def server(self):     
+        self.gotoPage(ServerPage)
 
     def client(self):
-        global sname
-        sname = self.nameB.get()
-        sName.set('You : '  + sname)
-        
-        clientPage = ClientPage(self.master)
-        self.destroy()
-        clientPage.pack()
+        self.gotoPage(ClientPage)
 
     def __init__(self,app):
         Frame.__init__(self, app)
