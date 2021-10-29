@@ -6,23 +6,23 @@ import socket
 from threading import Thread
 from time import sleep
 
-port =9999
-host='localhost'
-sname=''
-oname=''
+port = 9999
+host = 'localhost'
+sname = ''
+oname = ''
 
 def br(msg):
-    txts=msg.split()
-    l=['']
-    i=0
+    txts = msg.split()
+    l = ['']
+    i = 0
     for txt in txts:
-        if len(l[i]+txt+' ')<=35:
-            l[i]+=txt+' '
+        if len(l[i] + txt + ' ') <= 35:
+            l[i] += txt + ' '
         else:
-            i+=1
+            i += 1
             l.append('')
-            l[i]=txt+' '
-    return '\n'.join(l)+'\n'
+            l[i] = txt + ' '
+    return '\n'.join(l) + '\n'
 
 
 
@@ -30,27 +30,27 @@ class MainPage(Frame):
 
     def server(self):     
         global sname
-        sname=self.nameB.get()
+        sname = self.nameB.get()
         sName.set('You : '+sname)
         
-        serverPage=ServerPage(self.master)
+        serverPage = ServerPage(self.master)
         self.destroy()
         serverPage.pack()
 
     def client(self):
         global sname
-        sname=self.nameB.get()
-        sName.set('You : '+sname)
+        sname = self.nameB.get()
+        sName.set('You : '  + sname)
         
-        clientPage=ClientPage(self.master)
+        clientPage = ClientPage(self.master)
         self.destroy()
         clientPage.pack()
 
     def __init__(self,app):
-        Frame.__init__(self,app)
+        Frame.__init__(self, app)
         self.config(bg='dark grey')
         
-        self.appL=Label(self, bg = 'yellow', fg='green', font='helvetica 20',text='GUI CHAT APP',width=32, relief=RAISED)
+        self.appL=Label(self, bg='yellow', fg='green', font='helvetica 20',text='GUI CHAT APP',width=32, relief=RAISED)
         self.appL.pack(fill=X)
 
         self.f1=Frame(self)
