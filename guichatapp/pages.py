@@ -277,7 +277,7 @@ class ChatPage(Frame):
         self.oplate=Label(self, bg = 'green', fg= 'blue', font='helvetica 18',textvariable=oName, relief=SOLID)
         self.oplate.pack(fill=X)
 
-        self.chat=ScrolledText(self,state=DISABLED,height=27,font='arial 12')
+        self.chat=ScrolledText(self,state=DISABLED,height=26,font='arial 12')
         self.chat.pack(fill=X)
 
         self.chat.tag_config('left',justify='left',foreground='blue',background='pink')
